@@ -3,7 +3,7 @@
  
  using namespace std;
 
-class Stats;
+class Stat;
 
 class Car{
 private:
@@ -16,7 +16,7 @@ public:
         horsepower=hp;
     }
 
-    friend void Dyno(Car &cCar, Stats &cStats);
+    friend void Dyno(Car &cCar, Stat &cStat);
     friend bool operator ==(Car &cCar,Car &xCar);
     friend bool operator >(Car &cCar,Car &xCar);
     friend ostream& operator <<(ostream & out, Car & cCar);
