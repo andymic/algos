@@ -23,25 +23,25 @@ public:
     friend istream& operator >>(istream & in, Car & cCar);
  };
 
-class Stats{
+class Stat{
 private:
     string color;
     long modelnumber;
 public:
-    Stats(string cl="", long md=0)
+    Stat(string cl="", long md=0)
     {
         color=cl;
         modelnumber=md;
     }
 
     friend void Dyno(Car &cCar, Stats &cStats);
-    friend ostream& operator <<(ostream & out, Stats & cStats);
-    friend istream& operator >>(istream & in, Stats & cStats);
+    friend ostream& operator <<(ostream & out, Stat & cStat);
+    friend istream& operator >>(istream & in, Stat & cStat);
 };
 
-void Dyno(Car &cCar, Stats &cStats)
+void Dyno(Car &cCar, Stat &cStat)
 {
-   cout<<cCar<<cStats<<endl;
+   cout<<cCar<<cStat<<endl;
 }
 
 bool operator ==(Car &cCar,Car &xCar)
@@ -63,12 +63,12 @@ ostream& operator <<(ostream & out, Car & cCar)
 
     return out;
 }
-ostream& operator <<(ostream & out, Stats & cStats)
+ostream& operator <<(ostream & out, Stat & cStat)
 {
-    out<<"Car stats:"<<endl;
+    out<<"Car stat:"<<endl;
     out<<"---------"<<endl;
-    out<<"Color: "<<cStats.color<<endl;
-    out<<"Model Number: "<<cStats.modelnumber<<endl;
+    out<<"Color: "<<cStat.color<<endl;
+    out<<"Model Number: "<<cStat.modelnumber<<endl;
 
     return out;
 }
@@ -78,23 +78,23 @@ ostream& operator <<(ostream & out, Stats & cStats)
     in >> cCar.gear;
     return in;
  }
- istream& operator >>(istream & in, Stats & cStats)
+ istream& operator >>(istream & in, Stat & cStat)
  {
-    in >> cStats.color;
-    in >> cStats.modelnumber;
+    in >> cStat.color;
+    in >> cStat.modelnumber;
     return in;
  }
  int main(void)
  {
     // Car * c= new Car(50,3);
     // Car * x= new Car(50,3);
-    // Stats * s= new Stats("Black",123456);
+    // Stat * s= new Stat("Black",123456);
     Car * c= new Car();
-    Stats * s= new Stats();
+    Stat * s= new Stat();
 
     cout<<"Enter car info:"<<endl;
     cin>>*c;
-    cout<<"Enter car stats:"<<endl;
+    cout<<"Enter car stat:"<<endl;
     cin>>*s;
     Dyno(*c,*s);
  
