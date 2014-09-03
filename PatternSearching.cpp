@@ -47,9 +47,6 @@ void patternSearch(char * pattern, char * text)
 }
 int main(void)
 {
-	cout << "Welcome to pattern searching" << endl;
-	cout << "----------------------------" << " Created by Andy Michel: 6/23/2014" << endl;
-
 	 patternSearch("ABABCABAB", "ABABDABACDABABCABAB");
 	 cout << "\n";
 	return 0;
