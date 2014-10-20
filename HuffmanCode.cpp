@@ -11,12 +11,16 @@ void CalcFrequencies( char * buffer)
 	{
 		frequencies[buffer[i]]++;
 	}
+	// for(int i=0; i<4096; i++)
+	// {
+	// 	cout<<char(frequencies[i]);
+	// }
 }
 
 bool OpenNRead()
 {
 	string line;
-	ifstream file("");
+	ifstream file("C:\\Users\\AndMichel\\Documents\\Projects\\Sites-NewIps.txt");
 	char * buffer=new char[4096];
 
 	for(int i=0; i<256; i++)
