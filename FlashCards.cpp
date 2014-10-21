@@ -64,9 +64,12 @@ void DecomposeLines(FileHandler fl)
 	for(vector<string>::iterator it = vec.begin(); it != vec.end(); it++)
 	{
 		string line=*it;
-    	string word = line.substr(0, line.find(delimiter));
-    	string definition=line.substr(line.find(delimiter), line.length()-1);
-    	//cout<<"Words:"<<word<<" --definition: "<<definition<<endl;
+    	if (line != "")
+		{
+			string word = line.substr(0, line.find(delimiter));
+			string definition = line.substr(line.find(delimiter), line.length() - 1);
+			//cout << "Words:" << word << " --definition: " << definition << endl;
+		}
     }
 	
 }
@@ -78,7 +81,7 @@ int main(void)
 	cd.definition = "nope";
 	cout << cd;
 
-	FileHandler fl("C:\\Users\\AndMichel\\Documents\\Runner\\dic.txt");
+	FileHandler fl("C:\\Users\\AndMichel\\Documents\\Runner\\dictionary.txt");
 	fl.ReadFile();
 	DecomposeLines(fl);
 	
