@@ -21,7 +21,7 @@ public:
 class FileHandler{
 public:
 	const string location;
-
+	vector<string> filecontent;
 	FileHandler(string loc=""):location(loc)
 	{
 	}
@@ -29,7 +29,7 @@ public:
 	{
 		string line;
 		ifstream file(location.c_str(), ifstream::in);
-		std::vector<string> vc;
+		vector<string> vc;
 		if(file.is_open())
 		{
 			while(getline(file,line))
@@ -37,15 +37,11 @@ public:
 				vc.push_back(line);
 			}
 		}
-
-		for(int i=0; i<vc.size(); i++)
-		{
-			cout<<vc[i]<<endl;
-		}
+		filecontent=vc;
 		file.close();
 	}
 
-
+	vector<string> GetFileContent(){return filecontent;}
 };
 ostream& operator<<(ostream &out, Card & cCard)
 {
@@ -70,7 +66,7 @@ int main(void)
 
 	FileHandler fl("");
 	fl.ReadFile();
-
+	
 	
 	return 0;
 }
