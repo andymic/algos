@@ -7,6 +7,7 @@
 #include <vector>
 using namespace std;
 
+
 class Card{
 public:
 	 string word;
@@ -18,6 +19,21 @@ public:
 	}
 };
 
+struct node
+{
+	Card card;
+	struct node* left;
+	struct node* right;
+};
+
+struct node *NewNode(Card cCard)
+{
+	struct node* node=new (struct node);
+	node->card=cCard;
+	node->left=NULL;
+	node->right=NULL;
+	return(node);
+};
 class FileHandler{
 public:
 	const string location;
@@ -68,7 +84,7 @@ void DecomposeLines(FileHandler fl)
 		{
 			string word = line.substr(0, line.find(delimiter));
 			string definition = line.substr(line.find(delimiter), line.length() - 1);
-			//cout << "Words:" << word << " --definition: " << definition << endl;
+			cout << word<<definition<< endl;
 		}
     }
 	
@@ -81,7 +97,7 @@ int main(void)
 	cd.definition = "nope";
 	cout << cd;
 
-	FileHandler fl("C:\\Users\\AndMichel\\Documents\\Runner\\dictionary.txt");
+	FileHandler fl("");
 	fl.ReadFile();
 	DecomposeLines(fl);
 	
