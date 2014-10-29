@@ -5,6 +5,7 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
+#include "AlphabeticalComp.h"
 using namespace std;
 
 
@@ -33,6 +34,43 @@ struct node *NewNode(Card cCard)
 	node->left=NULL;
 	node->right=NULL;
 	return(node);
+};
+
+class BinaryTree
+{
+public:
+	BinaryTree();
+	static int Search(struct node * node, Card cCard)
+	{
+		if(node==NULL)
+		{
+			return -1;
+		}
+		else
+		{
+			if(node->card.word==cCard.word)
+			{
+				return 1;
+			}
+			else 
+			{
+				char * _node=const_cast<char*>(node->card.word.c_str());
+				char * _card=const_cast<char*>(cCard.word.c_str());
+
+				int decision=CompareWords(_node,_card);
+
+				if(decision==1)
+					return(Search(node->right,cCard));
+				else if(decision==2)
+					return(Search(node->left, cCard));
+				else
+					return(Search(node->left, cCard));
+			}
+		}
+	}
+	~BinaryTree();
+
+	/* data */
 };
 class FileHandler{
 public:
@@ -92,10 +130,10 @@ void DecomposeLines(FileHandler fl)
 
 int main(void)
 {
-	Card cd;
-	cd.word = "blah";
-	cd.definition = "nope";
-	cout << cd;
+	//Card cd;
+	//cd.word = "blah";
+	//cd.definition = "nope";
+	//cout << cd;
 
 	FileHandler fl("");
 	fl.ReadFile();
