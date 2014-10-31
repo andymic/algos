@@ -40,7 +40,7 @@ class BinaryTree
 {
 public:
 	BinaryTree();
-	static int Search(struct node * node, Card cCard)
+    int Search(struct node * node, Card cCard)
 	{
 		if(node==NULL)
 		{
@@ -67,6 +67,31 @@ public:
 					return(Search(node->left, cCard));
 			}
 		}
+	}
+
+	struct node * Add(struct node * node, Card cCard)
+	{
+		if(cCard.word=="" || node ==NULL)
+		{
+			return (NewNode(cCard));
+		}
+		else
+		{
+			char * _node=const_cast<char*>(node->card.word.c_str());
+			char * _card=const_cast<char*>(cCard.word.c_str());
+
+			int decision=CompareWords(_node,_card);
+
+			if(decision==1)//source alphabetically comes first
+				node->right=Add(node->right,cCard);
+			else if(decision==2)//target alphabetically comes first
+				node->left=Add(node->left, cCard);
+			else if(decision==0)//they are equal
+				node->left=Add(node->left, cCard);
+
+			return(node);
+		}
+
 	}
 	~BinaryTree();
 
