@@ -18,6 +18,11 @@ public:
 		//head = NULL;
 	}
 
+	Node * Gethead()
+	{
+		return head;
+	}
+
 	void Add(int data)
 	{
 		if(head == NULL)
@@ -54,9 +59,8 @@ public:
 		{
 			if(head->next == NULL)
 			{
-				cout<<"List contains only one element";
 				delete head;
-				return NULL;
+				return true;
 			}
 
 			Node * temp = new Node();
@@ -86,6 +90,75 @@ public:
 		return true;
 	}
 
+	void RemoveDuplicates()
+	{
+		if(head == NULL)
+			return;
+
+		Node * t_curr = head;
+		Node * t_runner =  new Node();
+		Node * t_runner_prev = new Node();
+
+		while(t_curr != NULL)
+		{
+			t_runner = head;
+
+			while(t_runner != NULL)
+			{
+				if(t_runner != t_curr && t_runner->data == t_curr->data)
+				{
+					t_runner_prev->next = t_runner->next;
+					delete t_runner;
+					t_runner = t_runner_prev;
+				}
+
+				t_runner_prev = t_runner;
+				t_runner = t_runner->next;
+			}
+			t_curr = t_curr->next;
+		}
+	}
+
+	int KthToLast(int n)
+	{
+		if(head == NULL)
+			return -1;
+
+		Node * t_head = head;
+		int count = 0;
+		while(t_head != NULL)
+		{
+			count++;
+			t_head = t_head->next;
+		}
+
+		t_head = head;
+
+		if(n > count)
+			return -1;
+
+		for(unsigned int i =0; i< count-n; i++)
+		{
+			t_head = t_head->next;
+		}
+
+		return t_head->data;
+	}
+
+	Node * KthToLast(Node * n_head, int n, int& i)
+	{
+		if(n_head == NULL)
+			return NULL;
+
+	    Node * rec = KthToLast(n_head->next, n, i);
+		i++;
+
+		if(i == n)
+			return n_head;
+
+		return rec;
+	}
+	
 	void Print()
 	{
 		if(head == NULL)
@@ -108,12 +181,17 @@ public:
 int main(void)
 {
 	Linked_list * list = new Linked_list();
-
+	int k = 0;
 	 list->Add(0);
 	 list->Add(1);
+	 list->Add(2);
+	 list->Add(3);
+	 list->Add(3);
+	 list->Add(5);
+	 list->Add(1);
 	 list->Print();
-	 list->Delete(9);
-	 list->Print();
+	 cout<<list->KthToLast(list->Gethead(),4, k)->data;
+	 //list->Print();
 
 	return 0;
 }
