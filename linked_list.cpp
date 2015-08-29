@@ -1,5 +1,5 @@
 #include<iostream>
-
+#include<string.h>
 using namespace std;
 
 struct Node
@@ -158,7 +158,36 @@ public:
 
 		return rec;
 	}
-	
+
+	Linked_list * Partition(int x)
+	{
+		if(head == NULL)
+			return NULL;
+		string left, right;
+
+		Node * t_head = head;
+		while(t_head != NULL)
+		{
+			if(t_head->data <= x)
+			{
+				left+= t_head->data;
+			}
+			else
+			{
+				right+= t_head->data;
+			}
+			t_head = t_head->next;
+		}
+
+		Linked_list * result = new Linked_list();
+		for(int i =0; i<left.length(); i++)
+			result->Add(left[i]);
+
+		for(int i =0; i<right.length(); i++)
+			result->Add(right[i]);
+
+		return result;
+	}
 	void Print()
 	{
 		if(head == NULL)
@@ -182,15 +211,16 @@ int main(void)
 {
 	Linked_list * list = new Linked_list();
 	int k = 0;
-	 list->Add(0);
+	 list->Add(4);
 	 list->Add(1);
-	 list->Add(2);
-	 list->Add(3);
+	 list->Add(5);
+	 list->Add(6);
 	 list->Add(3);
 	 list->Add(5);
 	 list->Add(1);
 	 list->Print();
-	 cout<<list->KthToLast(list->Gethead(),4, k)->data;
+	 list->Partition(3)->Print();
+
 	 //list->Print();
 
 	return 0;
