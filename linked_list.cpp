@@ -1,5 +1,6 @@
-#include<iostream>
-#include<string.h>
+#include <iostream>
+#include <string.h>
+#include <sstream>
 using namespace std;
 
 struct Node
@@ -23,6 +24,18 @@ public:
 		return head;
 	}
 
+	int GetLen()
+	{
+		Node * t = head;
+		int count = 0;
+		while(t != NULL)
+		{
+			count++;
+			t=t->next;
+		}
+		return count;
+	}
+
 	void Add(int data)
 	{
 		if(head == NULL)
@@ -39,6 +52,27 @@ public:
 		Node * n = new Node();
 		n->next = NULL;
 		n->data = data;
+
+		while(t->next != NULL)
+		{
+			t = t->next;
+		}
+
+		t->next = n;
+	}
+
+	void AddNode(Node * n)
+	{
+		if(n == NULL)
+			return;
+
+		if(head == NULL)
+		{
+			head = n;
+			return;
+		}
+
+		Node * t = head;
 
 		while(t->next != NULL)
 		{
@@ -159,40 +193,93 @@ public:
 		return rec;
 	}
 
-	Linked_list * Partition(int x)
+	Node * Partition(int x)
 	{
 		if(head == NULL)
-			return NULL;
-		string left, right;
+			return NULL; 
 
+		Node * left = new Node();
+		Node * left_head = left;
+		Node * right = new Node();
+		Node * right_elements = right;
+		Node * right_head = new Node();
 		Node * t_head = head;
+		bool right_head_set = false;
+
 		while(t_head != NULL)
 		{
-			if(t_head->data <= x)
+			if(t_head->data < x)
 			{
-				left+= t_head->data;
+				left->next = t_head;
+				left = left->next;
+			}
+			else if(t_head->data == x && right_head_set)
+			{
+				left->next = t_head;
+				left = left->next;
+			}
+			else if(t_head->data == x && !right_head_set)
+			{
+				right_head = t_head;
+				right_head->next = NULL;
+				right_head_set = true;
 			}
 			else
 			{
-				right+= t_head->data;
+				right->next =  t_head;
+				right = right->next;
 			}
 			t_head = t_head->next;
 		}
 
-		Linked_list * result = new Linked_list();
-		for(int i =0; i<left.length(); i++)
-			result->Add(left[i]);
+		right->next = NULL;//remember to find out why right->next points to left's memory location
+		right_head->next = right_elements->next;
+		 
 
-		for(int i =0; i<right.length(); i++)
-			result->Add(right[i]);
+		if(left != NULL)
+		{
+			left->next = right_head;
+			return left_head->next;
+		}
 
-		return result;
+
+		return right_head;
 	}
+
+	string AddLinkedList(Node * a, Node * b, string& v, int& carry)
+	{
+		//assuming list are the same size if not then easy tweak
+		if(a == NULL && b == NULL)
+			return "";
+
+		int ops = a->data + b->data + carry;
+
+		 std::stringstream out;
+
+		 if(ops > 9)
+		 {
+		 	out << ops % 10;
+		 	carry = ops / 10;
+		 	v += out.str();
+		 }
+		 else
+		 {
+		 	carry = 0;
+		 	out<<ops;
+		 	v += out.str();
+		 }
+
+		AddLinkedList(a->next, b->next, v, carry);
+
+		return v;
+	}
+
 	void Print()
 	{
 		if(head == NULL)
 		{
 			cout<<"List is empty"<<endl;
+			return;
 		}
 
 		Node * t = head;
@@ -210,18 +297,20 @@ public:
 int main(void)
 {
 	Linked_list * list = new Linked_list();
-	int k = 0;
-	 list->Add(4);
-	 list->Add(1);
-	 list->Add(5);
-	 list->Add(6);
-	 list->Add(3);
-	 list->Add(5);
-	 list->Add(1);
-	 list->Print();
-	 list->Partition(3)->Print();
+	Linked_list * list1 = new Linked_list();
 
-	 //list->Print();
+	list->Add(7);
+	list->Add(1);
+	list->Add(6);
+
+	list1->Add(5);
+	list1->Add(9);
+	list1->Add(2);
+
+	string k ="";
+	int c = 0;
+	cout<<list->AddLinkedList(list->Gethead(), list1->Gethead(), k, c)<<endl;
+
 
 	return 0;
 }
