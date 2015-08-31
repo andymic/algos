@@ -274,6 +274,33 @@ public:
 		return v;
 	}
 
+	Node * GetCircleHead(Linked_list * list)
+	{
+		if(list == NULL)
+			return NULL;
+
+		Node * current = list->Gethead();
+		Node * runner = list->Gethead();
+
+		if(current->next == NULL)
+			return NULL;
+
+		while(current != NULL)
+		{
+			current = current->next;
+			runner = runner->next->next;
+
+			if(runner == NULL)
+				return NULL; //not circular
+
+			if(current == runner || current == runner->next)
+				return current;
+
+		}
+
+		return NULL;
+	}
+
 	void Print()
 	{
 		if(head == NULL)
@@ -303,14 +330,13 @@ int main(void)
 	list->Add(1);
 	list->Add(6);
 
-	list1->Add(5);
-	list1->Add(9);
-	list1->Add(2);
+	Node * n = new Node();
+	n->data = 7;
+	n->next = list->Gethead();
 
-	string k ="";
-	int c = 0;
-	cout<<list->AddLinkedList(list->Gethead(), list1->Gethead(), k, c)<<endl;
+	list->AddNode(n);
 
+	cout<<list->GetCircleHead(list)->data<<endl;
 
 	return 0;
 }
