@@ -218,10 +218,9 @@ public:
 				left->next = t_head;
 				left = left->next;
 			}
-			else if(t_head->data == x && !right_head_set)
+			else if((t_head->data == x) && (!right_head_set))
 			{
 				right_head = t_head;
-				right_head->next = NULL;
 				right_head_set = true;
 			}
 			else
@@ -232,7 +231,7 @@ public:
 			t_head = t_head->next;
 		}
 
-		right->next = NULL;//remember to find out why right->next points to left's memory location
+		right->next = NULL;
 		right_head->next = right_elements->next;
 		 
 
@@ -243,7 +242,6 @@ public:
 		}
 
 
-		return right_head;
 	}
 
 	string AddLinkedList(Node * a, Node * b, string& v, int& carry)
@@ -275,6 +273,7 @@ public:
 	}
 
 	Node * GetCircleHead(Linked_list * list)
+
 	{
 		if(list == NULL)
 			return NULL;
@@ -351,13 +350,21 @@ int main(void)
 	list->Add(7);
 	list->Add(1);
 	list->Add(6);
-	list->Add(6);
-	list->Add(1);
-	list->Add(7);
+	list->Add(3);
+	list->Add(2);
+	list->Add(17);
+	list->Add(15);
+	list->Add(78);
+	list->Add(34);
+	list->Add(65);
 
-	int len = 6;
-	int counter = 0;
-	cout<<list->IsPalindrome(list->Gethead(), len, counter)<<endl;
+	Node * temp = list->Partition(17);
 
+	while(temp != NULL)
+	{
+		cout<<temp->data;
+		temp = temp->next;
+	}
+	cout<<endl;
 	return 0;
 }
