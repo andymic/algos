@@ -301,6 +301,28 @@ public:
 		return NULL;
 	}
 
+	bool IsPalindrome(Node * n, int& len, int& counter)
+	{
+		if(n == NULL)
+			return false;
+
+		Node * a = n;
+		Node * b = n;
+
+		IsPalindrome(b->next, len, counter);
+
+		if(counter<len/2)
+		{
+			counter++;
+			if(a->data != b->data)
+				return false;
+
+			a = a->next;
+		}
+		
+
+		return true;
+	}
 	void Print()
 	{
 		if(head == NULL)
@@ -324,19 +346,18 @@ public:
 int main(void)
 {
 	Linked_list * list = new Linked_list();
-	Linked_list * list1 = new Linked_list();
+
 
 	list->Add(7);
 	list->Add(1);
 	list->Add(6);
+	list->Add(6);
+	list->Add(1);
+	list->Add(7);
 
-	Node * n = new Node();
-	n->data = 7;
-	n->next = list->Gethead();
-
-	list->AddNode(n);
-
-	cout<<list->GetCircleHead(list)->data<<endl;
+	int len = 6;
+	int counter = 0;
+	cout<<list->IsPalindrome(list->Gethead(), len, counter)<<endl;
 
 	return 0;
 }
