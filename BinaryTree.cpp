@@ -1,5 +1,5 @@
 #include <iostream>
-
+#include <cmath>
 using namespace std;
 
 struct Node {
@@ -8,56 +8,120 @@ struct Node {
 	Node * right;
 };
 
-class BinaryTree{
-private:
-	Node * root = NULL;
-public:
-	Node * GetRoot()
+Node * makeNode(int data)
+{
+	Node * n = new Node();
+	n->data = data;
+	n->left = NULL;
+	n->right = NULL;
+	return n;
+}
+
+Node * Insert(Node * root, int data)
+{
+	if(root == NULL)
 	{
-		return root;
+		root = makeNode(data);
 	}
+	else if(data > root->data)
+		root->right = Insert(root->right, data);
+	else
+		root->left = Insert(root->left, data);
 
-	void AddNode(Node * node, int data)
+	return root;
+}
+
+void InOrderPrint(Node * root)
+{
+	if(root != NULL)
 	{
-		if(node == NULL)
-		{
-			Node * n = new Node();
-			node->left = NULL;
-			node->right = NULL;
-			node->data = data;
-
-			root = n;
-		}
-		else
-		{
-			if(root->data < data)
-				AddNode(node->right, data);
-			else
-				AddNode(node->left, data);
-		}
+		InOrderPrint(root->left);
+		cout<<root->data<<" ";
+		InOrderPrint(root->right);
 	}
-
-	void DeleteNode(Node * node, int data)
+	else
 	{
+		return;
+	}
+}
+
+void PreOrderPrint(Node * root)
+{
+	if(root != NULL)
+	{
+		cout<<root->data<<" ";
+		PreOrderPrint(root->left);
+		PreOrderPrint(root->right);
+	}
+	else
+	{
+		return;
+	}
+}
+
+void PostOrderPrint(Node * root)
+{
+	if(root != NULL)
+
+	{
+		PostOrderPrint(root->left);
+		PostOrderPrint(root->right);
+		cout<<root->data<<" ";
+	}
+	else
+	{
+		return;
+	}
+}
+
+bool IsBalanced(Node * root)
+{
+	Node * left = root;
+	Node * right = root;
+
+	int leftHeight = 0;
+	int rightHeihgt = 0;
+
+	cout<<"Left data : ";
+	while(left != NULL)
+	{
+		cout<<left->data<< " ";
+		if(left->left != NULL)
+			left = left->left;
+		else 
+			left = left->right;
+
+		leftHeight++;
+
 		
 	}
-
-	Node * Search(Node * node, int target)
+	cout<<endl;
+	cout<<"Right data : ";
+	while(right != NULL)
 	{
-		if(node == NULL)
-			return NULL;
-
-		if(node->data == target)
-			return node;
-
-		if(node->data < target)
-			Search(node->right, target);
-		else
-			Search(node->left, target);
+		cout<<right->data<< " ";
+		if(right->right != NULL)
+			right = right->right;
+		else 
+			right = right->left;
+		
+		rightHeihgt++;
 	}
-
-};
+	cout<<endl;
+	cout<<"Left "<<leftHeight<<" Right "<<rightHeihgt<<endl;
+	return (abs(left - right) < 2);
+}
 int main(void)
 {
+    const int tree[16] = {50,76,21,4,32,64,15,52,14,100,83,2,3,70,87,80};
+	Node * root = NULL;
+
+	for(int i=0; i<16; i++)
+	 root = Insert(root, tree[i]);
+
+	PreOrderPrint(root);
+	cout<<endl;
+	cout<<IsBalanced(root)<<endl;
+	cout<<endl;
 	return 0;
 }
