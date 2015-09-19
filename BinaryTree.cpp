@@ -74,42 +74,31 @@ void PostOrderPrint(Node * root)
 	}
 }
 
+int Max(int a, int b)
+{
+	return (a >= b) ? a : b;
+}
+
+int TreeHeight(Node * node)
+{
+	if(node == NULL)
+		return 0;
+
+	return 1+Max(TreeHeight(node->left), TreeHeight(node->right));
+}
+
 bool IsBalanced(Node * root)
 {
-	Node * left = root;
-	Node * right = root;
+	if(root == NULL)
+		return false;
 
-	int leftHeight = 0;
-	int rightHeihgt = 0;
+	int lh = 0, rh = 0;
 
-	cout<<"Left data : ";
-	while(left != NULL)
-	{
-		cout<<left->data<< " ";
-		if(left->left != NULL)
-			left = left->left;
-		else 
-			left = left->right;
+	lh = TreeHeight(root->left);
+	rh = TreeHeight(root->right);
 
-		leftHeight++;
-
-		
-	}
-	cout<<endl;
-	cout<<"Right data : ";
-	while(right != NULL)
-	{
-		cout<<right->data<< " ";
-		if(right->right != NULL)
-			right = right->right;
-		else 
-			right = right->left;
-		
-		rightHeihgt++;
-	}
-	cout<<endl;
-	cout<<"Left "<<leftHeight<<" Right "<<rightHeihgt<<endl;
-	return (abs(left - right) < 2);
+	cout<<"Left "<<lh<<" Right "<<rh<<endl;
+	return abs(lh - rh) <= 1;
 }
 int main(void)
 {
