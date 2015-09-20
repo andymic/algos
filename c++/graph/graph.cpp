@@ -129,7 +129,7 @@ public:
 			adjList[ar].adjList = adjList[ar].adjList->next;
 		}
 
-		if(!directed)
+		if(directed)
 		{
 			int br = GetVertexIndex(adjList, b, adjListLength);
 
