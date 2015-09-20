@@ -37,6 +37,7 @@ class Graph {
 private:
 	Vertex * adjList;
 	int adjListLength;
+	bool directed = false;
 
 	int GetVertexIndex(Vertex * vt, string name, int adj_len)
 	{
@@ -56,8 +57,6 @@ public:
 		if(infile.good())
 		{
 			string line;
-			bool directed = false;
-			int al_size;
 			string delimiter = " ";
 
 			infile >> line;
@@ -67,10 +66,10 @@ public:
 
 			infile >> line;
 
-			al_size = adjListLength = atoi(line.c_str());
-			adjList = new Vertex[al_size];
+			adjListLength = atoi(line.c_str());
+			adjList = new Vertex[adjListLength];
 
-			for(int v = 0; v<al_size; v++)
+			for(int v = 0; v<adjListLength; v++)
 			{
 				infile >> line;
 				adjList[v] = makeVertex(line, NULL);
@@ -83,8 +82,8 @@ public:
 					string a = line.substr(0, line.find(delimiter));
 					string b = line.substr(line.find(delimiter)+1, line.length());
 
-					int ai = GetVertexIndex(adjList, a, al_size);
-					int bi = GetVertexIndex(adjList, b, al_size);
+					int ai = GetVertexIndex(adjList, a, adjListLength);
+					int bi = GetVertexIndex(adjList, b, adjListLength);
 
 					adjList[ai].adjList = makeEdge(bi, adjList[ai].adjList);
 
@@ -117,10 +116,39 @@ public:
 			cout<<endl;
 		}
 	}
+
+	bool RouteExist(string a, string b)
+	{
+		int ar = GetVertexIndex(adjList, a, adjListLength);
+
+		while(adjList[ar].adjList != NULL)
+		{
+			if(b == adjList[adjList[ar].adjList->vertexIndex].name)
+				return true;
+
+			adjList[ar].adjList = adjList[ar].adjList->next;
+		}
+
+		if(!directed)
+		{
+			int br = GetVertexIndex(adjList, b, adjListLength);
+
+			while(adjList[br].adjList != NULL)
+			{
+				if(a == adjList[adjList[br].adjList->vertexIndex].name)
+					return true;
+
+				adjList[br].adjList = adjList[br].adjList->next;
+			}
+		}
+
+
+		return false;
+	}
 };
 int main(void)
 {
 	Graph * g = new Graph("friends.txt");
-	g->Print();
+	cout<<g->RouteExist("Me", "You");
 	return 0;
 }
