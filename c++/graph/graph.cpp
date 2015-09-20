@@ -5,26 +5,26 @@
 
 using namespace std;
 
-struct Neighbor{
+struct Edge{
 	int vertexIndex;
-	Neighbor * next;
+	Edge * next;
 };
 
 struct Vertex{
 	string name;
-	Neighbor * adjList;
+	Edge * adjList;
 };
 
-Neighbor * makeNeighbor(int v, Neighbor * nb)
+Edge * makeEdge(int v, Edge * nb)
 {
-	Neighbor * n = new Neighbor();
+	Edge * n = new Edge();
 	n->vertexIndex = v;
 	n->next = nb;
 
 	return n;
 }
 
-Vertex makeVertex(string n, Neighbor * nb)
+Vertex makeVertex(string n, Edge * nb)
 {
 	Vertex v;
 	v.name = n;
@@ -86,13 +86,11 @@ public:
 					int ai = GetVertexIndex(adjList, a, al_size);
 					int bi = GetVertexIndex(adjList, b, al_size);
 
-					adjList[ai].adjList = makeNeighbor(bi, adjList[ai].adjList);
-					//adjList[GetVertexIndex(adjList, a, al_size)].adjList = adjList[GetVertexIndex(adjList, a, al_size)].adjList->next;
+					adjList[ai].adjList = makeEdge(bi, adjList[ai].adjList);
 
 					if(!directed)
 					{
-						adjList[bi].adjList = makeNeighbor(ai, adjList[bi].adjList);
-						//adjList[GetVertexIndex(adjList, b, al_size)].adjList = adjList[GetVertexIndex(adjList, b, al_size)].adjList->next;
+						adjList[bi].adjList = makeEdge(ai, adjList[bi].adjList);
 					}
 					
 				}
