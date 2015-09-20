@@ -1,0 +1,19 @@
+directed
+10
+Me
+You
+Him
+Her
+Them
+This
+Blah
+Nope
+Ping
+Git
+Me You
+Me Her
+Him Her
+Them This
+Blah Nope
+Ping Git
+Ping You
