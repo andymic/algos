@@ -1,5 +1,7 @@
 #include <iostream>
 #include <cmath>
+#include <queue>
+
 using namespace std;
 
 struct Node {
@@ -74,6 +76,30 @@ void PostOrderPrint(Node * root)
 	}
 }
 
+void LevelOrderPrint(Node * root)
+{
+	//using a queue
+	if(root == NULL)
+		return;
+
+	queue<Node*> q;
+	q.push(root);
+
+	while(!q.empty())
+	{
+		Node * front = q.front();
+		cout<<front->data<<endl;
+
+		if(front->left != NULL)
+			q.push(front->left);
+
+		if(front->right != NULL)
+			q.push(front->right);
+
+		q.pop();
+	}
+}
+
 int Max(int a, int b)
 {
 	return (a >= b) ? a : b;
@@ -100,17 +126,60 @@ bool IsBalanced(Node * root)
 	cout<<"Left "<<lh<<" Right "<<rh<<endl;
 	return abs(lh - rh) <= 1;
 }
+
+Node * CreateMinimalHeightBTree(Node * root, const int tree [], int len)
+{
+	//iterative ,m 
+	if(len == 0)
+		return NULL;
+
+	int midelem = len/2;
+
+	root = Insert(root, tree[midelem]);
+
+	for(int i = 0; i<=len; i++)
+	{
+		if(i != midelem)
+			root = Insert(root, tree[i]);
+	}
+
+	return root;
+}
+
+Node * CreateMinimalHeightBTree(int tree [], int start, int end)
+{
+	//recursive...faster by cutting the extra traversal down tree.
+	if(end < start)
+		return NULL;
+
+	int mid = (start+end)/2;
+	Node * n = makeNode(tree[mid]);
+	n->left = CreateMinimalHeightBTree(tree, start, mid -1);
+	n->right = CreateMinimalHeightBTree(tree, mid+1, end);
+
+	return n;
+}
+
 int main(void)
 {
-    const int tree[16] = {50,76,21,4,32,64,15,52,14,100,83,2,3,70,87,80};
+    //const int tree[16] = {50,76,21,4,32,64,15,52,14,100,83,2,3,70,87,80};
+
+    //int tree[16] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
+
+	int tree[5] = {0,1,2,3,4};
 	Node * root = NULL;
 
-	for(int i=0; i<16; i++)
-	 root = Insert(root, tree[i]);
+	root = CreateMinimalHeightBTree(tree, 0, 4);
 
-	PreOrderPrint(root);
+	// for(int i=0; i<16; i++)
+	//  root = 
+	//InOrderPrint(root);
+	LevelOrderPrint(root);
+
+	root = NULL;
 	cout<<endl;
-	cout<<IsBalanced(root)<<endl;
-	cout<<endl;
+	root = CreateMinimalHeightBTree(root, tree, 4);
+	LevelOrderPrint(root);
+
 	return 0;
 }
