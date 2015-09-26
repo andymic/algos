@@ -226,13 +226,20 @@ Node * CreateMinimalHeightBTree(int tree [], int start, int end)
 
 list<int> * CreateListByLevel(Node * root)
 {
+	//Returns pointer to an array D list(s) where D is the depth of the tree
 	if(root == NULL)
 		return NULL;
 
+	int depth = TreeHeight(root);
+
 	queue<Node*> currlevel;
 	currlevel.push(root);
-	list<int> * blink = new list<int>;
+
+	list<int> * arList = new list<int>[depth];
+	list<int> tempList;
+
 	int nodesInCurrLevel = 1, nodesInNextLevel = 0;
+	int index = 0;
 
 	while(!currlevel.empty())
 	{
@@ -242,7 +249,7 @@ list<int> * CreateListByLevel(Node * root)
 
 		if(curr)
 		{
-			blink->push_back(curr->data);
+			tempList.push_back(curr->data);
 			currlevel.push(curr->left);
 			currlevel.push(curr->right);
 			nodesInNextLevel += 2;
@@ -252,28 +259,46 @@ list<int> * CreateListByLevel(Node * root)
 		{
 			nodesInCurrLevel = nodesInNextLevel;
 			nodesInNextLevel = 0;
+
+			if(index < depth)
+			{
+				arList[index] = tempList;
+				index++;
+				tempList.clear();
+			}
 		}
 	}
 
-	return blink;
+	return arList;
 }
-int main(void)
+
+/////////////////////////////////////////////////////////////////////Test Methods/////////////////////////////////////////////////////////
+void CreateListByLevelTest()
 {
-    int tree[16] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
+	int tree[16] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
 
 	Node * root = NULL;
 
 	root = CreateMinimalHeightBTree(tree, 0, 15);
 
-	LevelOrderPrettyPrint(root);
-	cout<<endl;
+	list<int> * arList = CreateListByLevel(root);
+	int depth = TreeHeight(root);
 
-	list<int> * l = CreateListByLevel(root);
+	for(int i =0; i<depth; i++)
+	{
+		cout<<"List "<<i+1<<endl;
+		for(list<int>::iterator it = arList[i].begin(); it!= arList[i].end(); it++ )
+		{
+			cout<<*it<<" ";
+		}
+		cout<<endl;
+	}
 
-	for(list<int>::iterator it = l->begin(); it!= l->end(); it++ )
-		cout<<*it<<" ";
+	delete [] arList;
+}
 
-	cout<<endl;
-
+int main(void)
+{
+	CreateListByLevelTest();
 	return 0;
 }
