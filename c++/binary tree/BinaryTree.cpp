@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cmath>
 #include <queue>
+#include <list>
 
 using namespace std;
 
@@ -83,6 +84,8 @@ void LevelOrderPrint(Node * root)
 		return;
 
 	queue<Node*> q;
+	queue<Node*> level;
+
 	q.push(root);
 
 	while(!q.empty())
@@ -100,6 +103,67 @@ void LevelOrderPrint(Node * root)
 	}
 }
 
+// void LevelOrderPrettyPrint(Node * root)
+// {
+// 	if(root == NULL)
+// 		return;
+
+// 	queue<Node*> currlevel, nextlevel;
+
+// 	currlevel.push(root);
+
+// 	while(!currlevel.empty())
+// 	{
+// 		Node * temp = currlevel.front();
+// 		currlevel.pop();
+
+// 		if(temp)
+// 		{
+// 			cout<<temp->data<<" ";
+// 			nextlevel.push(temp->left);
+// 			nextlevel.push(temp->right);
+// 		}
+
+// 		if(currlevel.empty())
+// 		{
+// 			swap(currlevel, nextlevel);
+// 			cout<<endl;
+// 		}
+// 	}
+// }
+
+void LevelOrderPrettyPrint(Node * root)
+{
+	if(root == NULL)
+		return;
+
+	queue<Node*> currlevel;
+	int nodesInCurrLevel = 1, nodesInNextLevel = 0;
+
+	currlevel.push(root);
+
+	while(!currlevel.empty())
+	{
+		Node * temp = currlevel.front();
+		currlevel.pop();
+		nodesInCurrLevel--;
+
+		if(temp)
+		{
+			cout<<temp->data<<" ";
+			currlevel.push(temp->left);
+			currlevel.push(temp->right);
+			nodesInNextLevel+=2;
+		}
+
+		if(nodesInCurrLevel == 0)
+		{
+			nodesInCurrLevel = nodesInNextLevel;
+			nodesInNextLevel = 0;
+			cout<<endl;
+		}
+	}
+}
 int Max(int a, int b)
 {
 	return (a >= b) ? a : b;
@@ -160,26 +224,56 @@ Node * CreateMinimalHeightBTree(int tree [], int start, int end)
 	return n;
 }
 
+list<int> * CreateListByLevel(Node * root)
+{
+	if(root == NULL)
+		return NULL;
+
+	queue<Node*> currlevel;
+	currlevel.push(root);
+	list<int> * blink = new list<int>;
+	int nodesInCurrLevel = 1, nodesInNextLevel = 0;
+
+	while(!currlevel.empty())
+	{
+		Node * curr = currlevel.front();
+		currlevel.pop();
+		nodesInCurrLevel--;
+
+		if(curr)
+		{
+			blink->push_back(curr->data);
+			currlevel.push(curr->left);
+			currlevel.push(curr->right);
+			nodesInNextLevel += 2;
+		}
+
+		if(nodesInCurrLevel == 0)
+		{
+			nodesInCurrLevel = nodesInNextLevel;
+			nodesInNextLevel = 0;
+		}
+	}
+
+	return blink;
+}
 int main(void)
 {
-    //const int tree[16] = {50,76,21,4,32,64,15,52,14,100,83,2,3,70,87,80};
+    int tree[16] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
 
-    //int tree[16] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
-
-	int tree[5] = {0,1,2,3,4};
 	Node * root = NULL;
 
-	root = CreateMinimalHeightBTree(tree, 0, 4);
+	root = CreateMinimalHeightBTree(tree, 0, 15);
 
-	// for(int i=0; i<16; i++)
-	//  root = 
-	//InOrderPrint(root);
-	LevelOrderPrint(root);
-
-	root = NULL;
+	LevelOrderPrettyPrint(root);
 	cout<<endl;
-	root = CreateMinimalHeightBTree(root, tree, 4);
-	LevelOrderPrint(root);
+
+	list<int> * l = CreateListByLevel(root);
+
+	for(list<int>::iterator it = l->begin(); it!= l->end(); it++ )
+		cout<<*it<<" ";
+
+	cout<<endl;
 
 	return 0;
 }
