@@ -2,6 +2,7 @@
 #include <cmath>
 #include <queue>
 #include <list>
+#include <limits.h>
 
 using namespace std;
 
@@ -102,35 +103,6 @@ void LevelOrderPrint(Node * root)
 		q.pop();
 	}
 }
-
-// void LevelOrderPrettyPrint(Node * root)
-// {
-// 	if(root == NULL)
-// 		return;
-
-// 	queue<Node*> currlevel, nextlevel;
-
-// 	currlevel.push(root);
-
-// 	while(!currlevel.empty())
-// 	{
-// 		Node * temp = currlevel.front();
-// 		currlevel.pop();
-
-// 		if(temp)
-// 		{
-// 			cout<<temp->data<<" ";
-// 			nextlevel.push(temp->left);
-// 			nextlevel.push(temp->right);
-// 		}
-
-// 		if(currlevel.empty())
-// 		{
-// 			swap(currlevel, nextlevel);
-// 			cout<<endl;
-// 		}
-// 	}
-// }
 
 void LevelOrderPrettyPrint(Node * root)
 {
@@ -272,6 +244,60 @@ list<int> * CreateListByLevel(Node * root)
 	return arList;
 }
 
+bool IsBSTHelper(Node * root, int min, int max)
+{
+	if(root == NULL)
+		return true;
+
+	if(root->data > min && root->data <= max 
+		&& IsBSTHelper(root->left, min, root->data)
+		&& IsBSTHelper(root->right, root->data, max))
+		return true;
+	else
+		return false;
+}
+
+void IsBSTHelper(Node * root, list<int> * n)
+{
+	if(root == NULL)
+		return;
+
+	IsBSTHelper(root->left, n);
+	n->push_back(root->data);
+	IsBSTHelper(root->right, n);
+}
+
+bool IsBST(Node * root)
+{
+	if(root == NULL)
+		return true;
+
+	return IsBSTHelper(root, INT_MIN, INT_MAX);
+}
+
+bool IsBSTL(Node * root)
+{
+	if(root == NULL)
+		return true;
+
+	//check if tree is BST using a list
+	list<int> * n = new list<int>;
+	IsBSTHelper(root, n);
+
+	list<int>::iterator it;
+
+	int prev = INT_MIN;
+
+	for(it = n->begin(); it!= n->end(); it++)
+	{
+		if(*it < prev)
+			return false;
+		else
+			prev = *it;
+	}
+
+	return true;
+}
 /////////////////////////////////////////////////////////////////////Test Methods/////////////////////////////////////////////////////////
 void CreateListByLevelTest()
 {
@@ -299,6 +325,17 @@ void CreateListByLevelTest()
 
 int main(void)
 {
-	CreateListByLevelTest();
+	//int tree[16] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
+
+	//int tree[16] = {50,76,21,4,32,64,15,52,14,100,83,2,3,70,87,80};
+
+	Node * root = NULL;
+
+	root = CreateMinimalHeightBTree(tree, 0, 15);
+
+	LevelOrderPrettyPrint(root);
+
+	cout<<IsBSTL(root);
+
 	return 0;
 }
