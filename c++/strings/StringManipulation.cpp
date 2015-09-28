@@ -1,5 +1,5 @@
 #include <iostream>
-#include <string>
+#include <string.h>
  
  using namespace std;
 
@@ -31,10 +31,32 @@ void RemoveDuplicates(char * s)
     } 
     cout<<"Result: "<<res;
 }
+void swap(char * a, char * b)
+{
+    char temp = *a;
+    *a = *b;
+    *b=temp;
+}
+void Permutate(char *a, int start, int len)
+{
+    int i;
+
+    if(start == len)
+        cout<<a<<endl;
+    else
+    {
+        for(i = start; i<len; i++)
+        {
+            swap((a+start), (a+i));
+            Permutate(a, start+1, len);
+            swap((a+start), (a+i));
+        }
+    }
+}
  int main(void)
  {
-    char s[]="12345648";
-    int res=RemoveDuplicates(s);
+    char s[]="ABC";
+    Permutate(s, 0, 3);
 
  	return 0;
  }
