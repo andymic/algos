@@ -55,11 +55,6 @@ void Permutate(char *a, int start, int len)
     }
 }
 
-bool Anagram(char * a, char * b)
-{
-
-}
-
 void BubbleSort(char * s, int len)
 {
     //Runtime: On^2
@@ -81,7 +76,7 @@ void BubbleSort(char * s, int len)
     }
 }
 
-void SelctionSort(int * s, int len)
+void SelctionSort(char * s, int len)
 {
     //swaps in place the current min vs the actual min
     for (int i = 0; i < len - 1; i++)
@@ -97,7 +92,7 @@ void SelctionSort(int * s, int len)
     }
 }
 
-void InsertionSort(int * s, int len)
+void InsertionSort(char * s, int len)
 {
     for(int i = 1; i<len; i++)
     {
@@ -113,23 +108,28 @@ void InsertionSort(int * s, int len)
         s[index] = val;
     }
 }
-void Random()
-{
-    random_device rd; // obtain a random number from hardware
-    mt19937 eng(rd()); // seed the generator
-    uniform_int_distribution<> distr(1, 7); // define the range
 
-    for(int n=0; n<10; ++n)
-        std::cout << distr(eng) << ' '; // generate numbers
+bool IsAnagram(string a, string b)
+{   
+    if(a.length() != b.length())
+        return false;
+
+    InsertionSort((char *)&a[0], a.length());
+    InsertionSort((char *)&b[0], b.length());
+
+    for(int i = 0; i<a.length(); i++)
+    {
+        if(a[i] != b[i])
+            return false;
+    }
+
+    return true;
 }
+
 
 int main(void)
 {
-    int a[] = { 5,7,10,4,2,5,49,0,6 };
-    InsertionSort(a, 9);
-
-    for (int i = 0; i < 9; i++)
-        cout << a[i] << ",";
+   cout<<IsAnagram("creative", "reactive");
 
  	return 0;
 }
