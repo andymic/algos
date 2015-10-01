@@ -129,7 +129,7 @@ bool IsAnagram(string a, string b)
 
 int main(void)
 {
-   cout<<IsAnagram("creative", "reactive");
+   cout<<IsAnagram("sadder", "dreads");
 
  	return 0;
 }
