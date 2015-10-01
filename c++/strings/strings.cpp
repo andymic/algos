@@ -1,8 +1,7 @@
 #include <iostream>
 #include <string.h>
-#include <random>
 
- using namespace std;
+using namespace std;
 
 void RemoveDuplicates(char * s)
 {
@@ -126,12 +125,52 @@ bool IsAnagram(string a, string b)
     return true;
 }
 
+void ReverseWords(char * s, int start, int end)
+{
+    int len = (end - start)/2;
 
+    for(int i = 0; i<len; i++)
+    {
+        char temp = s[start];
+        s[start] = s[end -1];
+        s[end - 1] = temp;
+
+        start++;
+        end--;
+    }
+}
+
+char * ReverseWordsInString(char * s, char delimiter)
+{
+    int len = strlen(s);
+    int startseg = 0;
+    int endseg = 0;
+
+    for (int i = 0; i<len; i++)
+    {
+        if (s[i] == delimiter || s[i+1] == '\0')
+        {
+            ReverseWords(s, startseg, startseg + endseg);
+            startseg = i + 1;
+            endseg = 0;
+        }
+        else
+        {
+            endseg++;
+        }
+        
+    }
+    return s;
+}
 int main(void)
 {
-   cout<<IsAnagram("sadder", "dreads");
+    char a[] = "This is my first try";
 
- 	return 0;
+    cout << a << endl;
+    cout << ReverseWordsInString(a, ' ')<<endl;
+
+
+    return 0;
 }
 
  
