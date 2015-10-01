@@ -93,12 +93,26 @@ void SelctionSort(int * s, int len)
                 min = m;
         }
 
-        int temp = s[i];
-        s[i] = s[min];
-        s[min] = temp;
+        swap(s[i], s[min]);
     }
 }
 
+void InsertionSort(int * s, int len)
+{
+    for(int i = 1; i<len; i++)
+    {
+        int val = s[i];
+        int index = i;
+
+        while(index > 0 && s[index - 1] > val)
+        {
+            s[index] = s[index - 1];
+            index--;
+        }
+
+        s[index] = val;
+    }
+}
 void Random()
 {
     random_device rd; // obtain a random number from hardware
@@ -112,7 +126,7 @@ void Random()
 int main(void)
 {
     int a[] = { 5,7,10,4,2,5,49,0,6 };
-    SelctionSort(a, 9);
+    InsertionSort(a, 9);
 
     for (int i = 0; i < 9; i++)
         cout << a[i] << ",";
