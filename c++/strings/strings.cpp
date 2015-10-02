@@ -1,9 +1,10 @@
 #include <iostream>
 #include <string.h>
-
+#include <algorithm>
+#include <stdlib.h>  
 using namespace std;
 
-void RemoveDuplicates(char * s)
+char * RemoveDuplicates(char * s)
 {
     bool * hash= new bool[256];
 
@@ -18,18 +19,14 @@ void RemoveDuplicates(char * s)
     for(int i=0; i<length; i++)
     {
         int temp=s[i];
-        if(hash[temp])
-        {
-            cout<<"Duplicates found "<<temp<<" or "<<s[i]<<endl;
-        }
-        else
+        if(!hash[temp])
         {
             hash[temp]=true; 
             res+=s[i];
-        }
-          
-    } 
-    cout<<"Result: "<<res;
+        }          
+    }
+
+    return (char *)&res[0];
 }
 void swap(char * a, char * b)
 {
@@ -125,7 +122,7 @@ bool IsAnagram(string a, string b)
     return true;
 }
 
-void ReverseWords(char * s, int start, int end)
+void ReverseWord(char * s, int start, int end)
 {
     int len = (end - start)/2;
 
@@ -150,7 +147,7 @@ char * ReverseWordsInString(char * s, char delimiter)
     {
         if (s[i] == delimiter || s[i+1] == '\0')
         {
-            ReverseWords(s, startseg, startseg + endseg);
+            ReverseWord(s, startseg, startseg + endseg);
             startseg = i + 1;
             endseg = 0;
         }
@@ -162,14 +159,108 @@ char * ReverseWordsInString(char * s, char delimiter)
     }
     return s;
 }
+
+bool IsPalindrome(char * s)
+{
+    int len = strlen(s);
+
+    for(int i = 0, h = len-1; i<len-1; i++, h--)
+    {
+        if(s[i] != s[h])
+            return false;
+    }
+
+    return true;
+}
+
+void RemoveFromString(string &s, char * chars)
+{
+    for(int i = 0; i<strlen(chars); i++)
+    {
+        s.erase(remove(s.begin(), s.end(), chars[i]), s.end());
+    }
+}
+
+bool SpellChecker(string a, string b)
+{
+    /*Problem found at:http://mycodeschool.com/problems/spell-checker
+    First line of input will contain an integer T = number of test cases. Next T lines 
+    will each contain two strings comprising only of lower case English letters separated
+     by space. Strings are compared by these rules designed by Mr. X : 
+
+    1) All the vowels plus letter 'y' - set of characters: { 'a', 'e' , 'i', 'o', 'u', 'y' }
+     are removed from both the strings if they are present at any index other than 0. First 
+     letter is not removed even if its a vowel or 'y'. 
+
+    2) Two strings are similar and can be suggested for each other if the
+     first characters after modification by rule 1 are same and remaining 
+     characters after modification are not different at more than 2 positions.
+     If resulting strings after applying rule 1 are of unequal length, 
+     all the extra indices in larger string should be counted as having different characters.
+       e.g: if we get "bcd" and "bkd" after applying rule 1, they differ at one position. 
+     "pqrs" and "pq" differ at 2 positions, (extra positions in "pqrs")
+     */
+
+    char letter [6] = { 'a', 'e' , 'i', 'o', 'u', 'y' };   
+    int pos;
+    char pholder = '-';
+    for(int i = 0; i<6; i++)
+    {
+        while((pos = a.find(letter[i])) > 0)
+        {
+            a[pos] = pholder;
+        }
+
+        while((pos = b.find(letter[i])) > 0)
+        {
+            b[pos] = pholder;
+        }
+    }
+
+    RemoveFromString(a, (char*)&pholder);
+    RemoveFromString(b, (char*)&pholder);
+
+    if(abs((int)(a.length() - b.length())) > 2)
+        return false;
+
+    int diff = abs((int)(a.length() - b.length()));
+
+    int len;
+
+    if(a.length() < b.length())
+    {
+        len = a.length();
+        for(int i = 0; i<len; i++)
+        {
+            if(diff > 2)
+                return false;
+
+            if(a[i] != b[i] && i == 0)
+                return false;
+            else if(a[i] != b[i])
+                diff++;
+        }
+    }
+    else
+    {
+        len = b.length();
+        for(int i = 0; i<len; i++)
+        {
+            if(diff > 2)
+                return false;
+
+            if(a[i] != b[i] && i == 0)
+                return false;
+            else if(a[i] != b[i])
+                diff++;
+        }
+    }
+
+    return true;
+}
 int main(void)
 {
-    char a[] = "This is my first try";
-
-    cout << a << endl;
-    cout << ReverseWordsInString(a, ' ')<<endl;
-
-
+    cout<<SpellChecker("contest","test")<<endl;
     return 0;
 }
 

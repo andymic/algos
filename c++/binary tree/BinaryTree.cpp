@@ -299,7 +299,13 @@ bool IsBSTL(Node * root)
 	return true;
 }
 
+Node * FindSuccessor(Node * root)
+{
+	if(root == NULL)
+		return NULL;
 
+	
+}
 /////////////////////////////////////////////////////////////////////Test Methods/////////////////////////////////////////////////////////
 void CreateListByLevelTest()
 {
