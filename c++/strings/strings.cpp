@@ -258,9 +258,128 @@ bool SpellChecker(string a, string b)
 
     return true;
 }
-int main(void)
+
+bool IsSubString(string a, string b)
 {
-    cout<<SpellChecker("contest","test")<<endl;
+    return (a.find(b) != string::npos) ? true : false;
+}
+
+bool IsSubSequence(string a, string b, int counter, int match)
+{
+    //returns true if string b is a sub-sequence of string a
+    //params: counter is a.lengt() and match is b.length()
+    if(match == 0)
+        return true;
+
+    if(counter == 0)
+        return false;
+
+    if(a[counter-1] == b[match-1])
+        match--; 
+
+
+    counter--;
+
+    return IsSubSequence(a, b, counter, match);
+}
+
+int ParseInt(char * str)
+{
+    if(str == NULL)
+        return 0;
+
+    int val = 0;
+    bool negative = false;
+    int i = 0;
+
+    if(str[0] == '-')
+    {
+        negative = true;
+        i++;
+    }       
+
+    for(; str[i]!='\0'; i++)
+    {
+        if(str[i]>= '0' && str[i]<= '9')
+        {
+            val = (val*10) + (str[i] - '0');
+        }
+        else
+            return 0;        
+    }
+    
+    if(negative)
+        return (-1*val);
+
+    return val;   
+}
+
+double ParseDouble(char * str)
+{
+    if(str == NULL)
+        return 0;
+
+    double val = 0;
+    bool negative = false;
+    int i = 0;
+    int decimal = 1;
+    bool Isdecimal = false;
+    if(str[0] == '-')
+    {
+        negative = true;
+        i++;
+    }       
+
+    for(; str[i]!='\0'; i++)
+    {
+        if(str[i] == '.')
+            Isdecimal = true;
+        else if(str[i]>= '0' && str[i]<= '9' && !Isdecimal)
+        {
+            val = (val*10) + (str[i] - '0');
+        }
+        else if((str[i]>= '0' && str[i]<= '9' && Isdecimal))
+        {
+            decimal*=10;
+
+            val = (val*10) + (str[i] - '0');
+        }
+        else
+            return 0;        
+    }
+    
+    if(negative)
+        return (-1*val)/(decimal);
+
+    return val/decimal;  
+}
+
+char * ToUpper(char * str)
+{
+    if(str == NULL)
+        return NULL;
+
+    int i = 0;
+    int diff = 0;
+
+    for(; str[i]!= '\0'; i++)
+    {
+        if(str[i] >= 'a' && str[i] <= 'z' )
+        {
+            diff = str[i] - 'a';
+
+            str[i] = 'A' + diff;
+        }
+        else
+            NULL;
+    }
+
+    return str;
+}
+
+int main(void)
+{ 
+
     return 0;
 }
 
