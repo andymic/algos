@@ -34,7 +34,156 @@ Node * Insert(Node * root, int data)
 
 	return root;
 }
+Node * FindMin(Node * root)
+{
+	if(root == NULL)
+		return NULL;
 
+	while(root->left != NULL)
+		root = root->left;
+
+	return root;
+}
+
+Node * FindMax(Node * root)
+{
+	if(root == NULL)
+		return NULL;
+
+	while(root->right != NULL)
+		root = root->right;
+
+	return root;
+}
+
+bool IsLeaf(Node * n)
+{
+	return (n->left == NULL && n->right == NULL) ? true : false;
+}
+
+bool HasRightChild(Node * n)
+{
+	return (n->right != NULL) ? true : false;
+}
+
+bool HasLeftChild(Node * n)
+{
+	return (n->left != NULL) ? true : false;
+}
+
+void Delete(Node * root, int data)
+{
+	/**
+	Case:
+		1-No children or leaf node...remove link from parent and reclaim memory
+		2-One child...connect the parent to the only child then delete node object from memory
+		3-Two children
+			a)Get minimun in right, copy it to the node to delete then remove duplicate
+			b)Get maximun from the left subtree copy to target node then delete duplicate
+	**/
+	
+	if(root == NULL)
+		return;
+
+	if(root->data == data)
+	{
+		root = NULL;
+		delete root;
+		return;
+	}
+	else if(data == root->right->data)
+	{
+		if(IsLeaf(root->right))
+		{
+			Node * temp = root->right;
+			root->right = NULL;
+			delete temp;
+			return;
+		}
+		else if(HasRightChild(root->right) && HasLeftChild(root->right))
+		{
+			Node * temp = FindMin(root->right->right);
+
+			root->right->data = temp->data;
+
+			if(root->right->right->data == temp->data)
+			{
+				Node * temp = root->right->right;
+				root->right->right = NULL;
+				delete temp;
+				return;
+			}
+
+			Delete(root->right->right, temp->data);
+			return;
+		}
+		else if(HasLeftChild(root->right))
+		{
+			Node * temp = root->right->left;
+			Node * del = root->right;
+			root->right = temp;
+			delete del;
+			return;
+		}
+		else if(HasRightChild(root->right))
+		{
+			Node * temp = root->right->right;
+			Node * del = root->right;
+			root->right = temp;
+			delete del;
+			return;
+		}
+	}
+	else if(data == root->left->data)
+	{
+		if(IsLeaf(root->left))
+		{
+			Node * temp = root->left;
+			root->left = NULL;
+			delete temp;
+			return;
+		}
+		else if(HasRightChild(root->left) && HasLeftChild(root->left))
+		{
+			Node * temp = FindMax(root->left->left);
+
+			root->left->data = temp->data;
+
+			if(root->left->left->data == temp->data)
+			{
+				Node * temp = root->left->left;
+				root->left->left = NULL;
+				delete temp;
+				return;
+			}
+
+			Delete(root->left->left, temp->data);
+			return;
+		}
+		else if(HasLeftChild(root->left))
+		{
+			Node * temp = root->right->left;
+			Node * del = root->right;
+			root->right = temp;
+			delete del;
+			return;
+		}
+		else if(HasRightChild(root->left))
+		{
+			Node * temp = root->right->right;
+			Node * del = root->right;
+			root->right = temp;
+			delete del;
+			return;
+		}
+	}
+	else if(data > root->data)
+		Delete(root->right, data);
+	else
+		Delete(root->left, data);
+
+	
+}
 void InOrderPrint(Node * root)
 {
 	if(root != NULL)
@@ -331,9 +480,95 @@ void CreateListByLevelTest()
 	delete [] arList;
 }
 
+Node * GetSuccessorNode(Node * root, int data, Node * parent)
+{
+	if(root == NULL)
+		return NULL;
+
+	if(data == root->data)
+	{
+		if(root->right != NULL)
+		{
+			if(root->right->left != NULL)
+			{
+				root = root->right;
+
+				while(root->left != NULL)
+					root = root->left;
+
+				return root;
+			}
+			else
+			return root->right;
+		}
+		else
+			return parent;
+	}
+	else if(data < root->data)
+	{
+		GetSuccessorNode(root->left, data, parent = root);
+	}
+	else
+		GetSuccessorNode(root->right, data, parent = root);
+}
+
+Node * LeastCommonAncesstorBST(Node * root, Node * a, Node * b)
+{
+	if(root == NULL || a == NULL || b == NULL)
+		return NULL;
+
+	if(max(a->data, b->data) < root->data)
+		LeastCommonAncesstorBST(root->left, a, b);
+	else if(min(a->data, b->data) > root->data)
+		LeastCommonAncesstorBST(root->right, a, b);
+	else
+		return root;
+}
+
+Node * LeastCommonAncesstorBT(Node * root, Node * a, Node * b)
+{
+	if(root == NULL || a == NULL || b == NULL)
+		return NULL;
+
+	queue<Node*> v;
+	int nextlevel = 0, currlevel = 1;
+	int al = 0, bl = 0;
+	v.push(root);
+	Node * prev;
+
+	while(!v.empty())
+	{
+		Node * temp = v.front();
+		v.pop();
+
+		if(temp != NULL)
+		{
+			v.push(temp->left);
+			v.push(temp->right);
+			nextlevel+=2;
+
+			if(a->data == temp->data || b->data == temp->data)
+			{
+				return prev;
+			}
+		}
+
+		prev = temp;
+		currlevel--;
+
+		if(currlevel == 0)
+		{
+			currlevel = nextlevel;
+			nextlevel = 0;
+		}
+	}
+
+	return NULL;
+}
+
 int main(void)
 {
-	//int tree[16] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
+	int tree[16] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
 
 	//int tree[16] = {50,76,21,4,32,64,15,52,14,100,83,2,3,70,87,80};
 
@@ -343,7 +578,17 @@ int main(void)
 
 	LevelOrderPrettyPrint(root);
 
-	cout<<IsBSTL(root);
+	int ar [6] = {0,4,6,8,10, 3};
 
+	for(int i = 0; i<6; i++)
+	{
+		cout<<"Deleting : "<<ar[i]<<endl;
+		Delete(root, ar[i]);
+
+		LevelOrderPrettyPrint(root);
+
+		cout<<"IsBST :"<<IsBST(root)<<endl;
+	}
+	
 	return 0;
 }
