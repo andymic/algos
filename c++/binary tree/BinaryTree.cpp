@@ -234,7 +234,6 @@ void LevelOrderPrint(Node * root)
 		return;
 
 	queue<Node*> q;
-	queue<Node*> level;
 
 	q.push(root);
 
@@ -448,38 +447,6 @@ bool IsBSTL(Node * root)
 	return true;
 }
 
-Node * FindSuccessor(Node * root)
-{
-	if(root == NULL)
-		return NULL;
-
-	
-}
-/////////////////////////////////////////////////////////////////////Test Methods/////////////////////////////////////////////////////////
-void CreateListByLevelTest()
-{
-	int tree[16] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
-
-	Node * root = NULL;
-
-	root = CreateMinimalHeightBTree(tree, 0, 15);
-
-	list<int> * arList = CreateListByLevel(root);
-	int depth = TreeHeight(root);
-
-	for(int i =0; i<depth; i++)
-	{
-		cout<<"List "<<i+1<<endl;
-		for(list<int>::iterator it = arList[i].begin(); it!= arList[i].end(); it++ )
-		{
-			cout<<*it<<" ";
-		}
-		cout<<endl;
-	}
-
-	delete [] arList;
-}
-
 Node * GetSuccessorNode(Node * root, int data, Node * parent)
 {
 	if(root == NULL)
@@ -527,44 +494,74 @@ Node * LeastCommonAncesstorBST(Node * root, Node * a, Node * b)
 
 Node * LeastCommonAncesstorBT(Node * root, Node * a, Node * b)
 {
-	if(root == NULL || a == NULL || b == NULL)
-		return NULL;
-
-	queue<Node*> v;
-	int nextlevel = 0, currlevel = 1;
-	int al = 0, bl = 0;
-	v.push(root);
-	Node * prev;
-
-	while(!v.empty())
-	{
-		Node * temp = v.front();
-		v.pop();
-
-		if(temp != NULL)
-		{
-			v.push(temp->left);
-			v.push(temp->right);
-			nextlevel+=2;
-
-			if(a->data == temp->data || b->data == temp->data)
-			{
-				return prev;
-			}
-		}
-
-		prev = temp;
-		currlevel--;
-
-		if(currlevel == 0)
-		{
-			currlevel = nextlevel;
-			nextlevel = 0;
-		}
-	}
-
 	return NULL;
 }
+
+Node * FindKthSmallest(Node * root, int * k)
+{
+	if(root == NULL)
+		return NULL;
+	else
+	{
+
+		Node * temp = FindKthSmallest(root->left, k);
+
+		if(temp)
+			return temp;
+
+		(*k)--;
+
+		if(*k == 0)
+			return root;
+
+	    return FindKthSmallest(root->right, k);
+	}
+}
+
+Node * FindKthLargest(Node * root, int * k)
+{
+	if(root == NULL)
+		return NULL;
+
+	Node * temp = FindKthLargest(root->right, k);
+
+	if(temp)
+		return temp;
+
+	(*k)--;
+
+	if(*k == 0)
+		return root;
+
+	return FindKthLargest(root->left, k);
+}
+
+/////////////////////////////////////////////////////////////////////Test Methods/////////////////////////////////////////////////////////
+void CreateListByLevelTest()
+{
+	int tree[16] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
+
+	Node * root = NULL;
+
+	root = CreateMinimalHeightBTree(tree, 0, 15);
+
+	list<int> * arList = CreateListByLevel(root);
+	int depth = TreeHeight(root);
+
+	for(int i =0; i<depth; i++)
+	{
+		cout<<"List "<<i+1<<endl;
+		for(list<int>::iterator it = arList[i].begin(); it!= arList[i].end(); it++ )
+		{
+			cout<<*it<<" ";
+		}
+		cout<<endl;
+	}
+
+	delete [] arList;
+}
+
+
 
 int main(void)
 {
@@ -578,17 +575,12 @@ int main(void)
 
 	LevelOrderPrettyPrint(root);
 
-	int ar [6] = {0,4,6,8,10, 3};
+	int p = 10;
 
-	for(int i = 0; i<6; i++)
-	{
-		cout<<"Deleting : "<<ar[i]<<endl;
-		Delete(root, ar[i]);
+	Node * temp = FindKthLargest(root, &p);
 
-		LevelOrderPrettyPrint(root);
-
-		cout<<"IsBST :"<<IsBST(root)<<endl;
-	}
+	if(temp != NULL)
+		cout<<temp->data<<endl;
 	
 	return 0;
 }
