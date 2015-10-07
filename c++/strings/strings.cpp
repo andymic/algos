@@ -379,7 +379,8 @@ char * ToUpper(char * str)
 
 int main(void)
 { 
-
+    char ar[] = "abc";
+    Permutate(ar, 0, 3);
     return 0;
 }
 

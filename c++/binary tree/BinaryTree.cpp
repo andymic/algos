@@ -71,8 +71,8 @@ bool HasLeftChild(Node * n)
 	return (n->left != NULL) ? true : false;
 }
 
-void Delete(Node * root, int data)
-{
+Node * Delete(Node * root, int data)
+{ 
 	/**
 	Case:
 		1-No children or leaf node...remove link from parent and reclaim memory
@@ -81,108 +81,39 @@ void Delete(Node * root, int data)
 			a)Get minimun in right, copy it to the node to delete then remove duplicate
 			b)Get maximun from the left subtree copy to target node then delete duplicate
 	**/
-	
 	if(root == NULL)
-		return;
-
-	if(root->data == data)
-	{
-		root = NULL;
-		delete root;
-		return;
-	}
-	else if(data == root->right->data)
-	{
-		if(IsLeaf(root->right))
-		{
-			Node * temp = root->right;
-			root->right = NULL;
-			delete temp;
-			return;
-		}
-		else if(HasRightChild(root->right) && HasLeftChild(root->right))
-		{
-			Node * temp = FindMin(root->right->right);
-
-			root->right->data = temp->data;
-
-			if(root->right->right->data == temp->data)
-			{
-				Node * temp = root->right->right;
-				root->right->right = NULL;
-				delete temp;
-				return;
-			}
-
-			Delete(root->right->right, temp->data);
-			return;
-		}
-		else if(HasLeftChild(root->right))
-		{
-			Node * temp = root->right->left;
-			Node * del = root->right;
-			root->right = temp;
-			delete del;
-			return;
-		}
-		else if(HasRightChild(root->right))
-		{
-			Node * temp = root->right->right;
-			Node * del = root->right;
-			root->right = temp;
-			delete del;
-			return;
-		}
-	}
-	else if(data == root->left->data)
-	{
-		if(IsLeaf(root->left))
-		{
-			Node * temp = root->left;
-			root->left = NULL;
-			delete temp;
-			return;
-		}
-		else if(HasRightChild(root->left) && HasLeftChild(root->left))
-		{
-			Node * temp = FindMax(root->left->left);
-
-			root->left->data = temp->data;
-
-			if(root->left->left->data == temp->data)
-			{
-				Node * temp = root->left->left;
-				root->left->left = NULL;
-				delete temp;
-				return;
-			}
-
-			Delete(root->left->left, temp->data);
-			return;
-		}
-		else if(HasLeftChild(root->left))
-		{
-			Node * temp = root->right->left;
-			Node * del = root->right;
-			root->right = temp;
-			delete del;
-			return;
-		}
-		else if(HasRightChild(root->left))
-		{
-			Node * temp = root->right->right;
-			Node * del = root->right;
-			root->right = temp;
-			delete del;
-			return;
-		}
-	}
+		return NULL;
+	else if(data < root->data)
+		root->left = Delete(root->left, data);
 	else if(data > root->data)
-		Delete(root->right, data);
+		root->right = Delete(root->right, data);
 	else
-		Delete(root->left, data);
-
-	
+	{
+		if(IsLeaf(root))
+		{
+			delete root;
+			root = NULL;
+		}
+		else if(!HasLeftChild(root))
+		{
+			Node * temp = root;
+			root =  root->right;
+			delete temp;
+		}
+		else if(!HasRightChild(root))
+		{
+			Node * temp = root;
+			root = root->left;
+			delete temp;
+		}
+		else
+		{
+			Node * temp = FindMin(root->right);
+			root->data = temp->data;
+			root->right = Delete(root->right, temp->data);
+		}
+	}
+	return root;
 }
 void InOrderPrint(Node * root)
 {
@@ -561,9 +492,7 @@ void CreateListByLevelTest()
 	delete [] arList;
 }
 
-
-
-int main(void)
+void FindKthLargestTest()
 {
 	int tree[16] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
 
@@ -581,6 +510,27 @@ int main(void)
 
 	if(temp != NULL)
 		cout<<temp->data<<endl;
+}
+
+
+int main(void)
+{
 	
+	int tree[16] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
+
+	//int tree[16] = {50,76,21,4,32,64,15,52,14,100,83,2,3,70,87,80};
+
+	Node * root = NULL;
+
+	root = CreateMinimalHeightBTree(tree, 0, 15);
+
+	LevelOrderPrettyPrint(root);
+
+
+	int p = 7;
+
+	root = Delete(root, p);
+
+	LevelOrderPrettyPrint(root);
 	return 0;
 }

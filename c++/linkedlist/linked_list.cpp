@@ -199,10 +199,10 @@ public:
 			return NULL; 
 
 		Node * left = new Node();
-		Node * left_head = left;
+		Node * left_head = left; //pointer to head element of the left list
 		Node * right = new Node();
-		Node * right_elements = right;
-		Node * right_head = new Node();
+		Node * right_elements = right; //pointer to head element of the right list
+		Node * right_head = new Node(); //temp used for head element of the right list
 		Node * t_head = head;
 		bool right_head_set = false;
 
@@ -241,7 +241,7 @@ public:
 			return left_head->next;
 		}
 
-
+		return right_head;
 	}
 
 	string AddLinkedList(Node * a, Node * b, string& v, int& carry)
@@ -322,6 +322,28 @@ public:
 
 		return true;
 	}
+
+	Node * Reverse(Node * n)
+	{
+		if(n == NULL)
+			return NULL;
+
+		Node * prev = NULL;
+		Node * next;
+		Node * curr = n;
+
+		while(curr != NULL)
+		{
+			next = curr->next;
+			curr->next = prev;
+			prev = curr;
+			curr = next;
+		}
+
+		n = prev;
+		return n;
+	}
+
 	void Print()
 	{
 		if(head == NULL)
@@ -333,7 +355,7 @@ public:
 		Node * t = head;
 		while(t != NULL)
 		{
-			cout<<t->data;
+			cout<<t->data<<" ";
 			t=t->next;
 		}
 		cout<<endl;	
@@ -342,29 +364,35 @@ public:
 	~Linked_list();
 	
 };
-// int main(void)
-// {
-// 	Linked_list * list = new Linked_list();
+int main(void)
+{
+	Linked_list * list = new Linked_list();
 
 
-// 	list->Add(7);
-// 	list->Add(1);
-// 	list->Add(6);
-// 	list->Add(3);
-// 	list->Add(2);
-// 	list->Add(17);
-// 	list->Add(15);
-// 	list->Add(78);
-// 	list->Add(34);
-// 	list->Add(65);
+	list->Add(7);
+	list->Add(1);
+	list->Add(6);
+	list->Add(3);
+	list->Add(2);
+	list->Add(17);
+	list->Add(15);
+	list->Add(78);
+	list->Add(34);
+	list->Add(65);
 
-// 	Node * temp = list->Partition(17);
+	cout<<"Before reverse: "<<endl;
+	list->Print();
 
-// 	while(temp != NULL)
-// 	{
-// 		cout<<temp->data;
-// 		temp = temp->next;
-// 	}
-// 	cout<<endl;
-// 	return 0;
-// }
+	Node * t = list->Reverse(list->Gethead());
+
+	cout<<"After reverse: "<<endl;
+	while(t != NULL)
+		{
+			cout<<t->data<<" ";
+			t=t->next;
+		}
+		cout<<endl;
+
+	cout<<endl;
+	return 0;
+}
