@@ -34,6 +34,20 @@ Node * Insert(Node * root, int data)
 
 	return root;
 }
+
+Node * Search(Node * root, int data)
+{
+	if(root == NULL)
+		return NULL;
+
+	if(root->data == data)
+		return root;
+	else if(data > root->data)
+	    Search(root->right, data);
+	else
+		Search(root->left, data);
+}
+
 Node * FindMin(Node * root)
 {
 	if(root == NULL)
@@ -467,6 +481,33 @@ Node * FindKthLargest(Node * root, int * k)
 	return FindKthLargest(root->left, k);
 }
 
+bool IsSubtreeMatch(Node * a, Node * b)
+{
+	if(a == NULL && b == NULL)
+		return true;
+	
+	if(a == NULL || b == NULL)
+		return false;
+
+	return(a->data == b->data && 
+		IsSubtreeMatch(a->left, b->left) &&
+		IsSubtreeMatch(a->right, b->right));
+}
+
+bool IsSubtree(Node * a, Node * b)
+{
+	if(a == NULL)
+		return false;
+
+	if(b == NULL) 
+		return true;
+
+	if(IsSubtreeMatch(a, b))
+		return true;
+
+	//check left or right subtrees if current node is not a match
+	return IsSubtree(a->left, b) || IsSubtree(a->right, b); 
+}
 /////////////////////////////////////////////////////////////////////Test Methods/////////////////////////////////////////////////////////
 void CreateListByLevelTest()
 {
@@ -516,21 +557,26 @@ void FindKthLargestTest()
 int main(void)
 {
 	
-	int tree[16] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
-
-	//int tree[16] = {50,76,21,4,32,64,15,52,14,100,83,2,3,70,87,80};
+	//int tree[16] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
+	int treeb[7] = {21,4,32,2,15,3,15};
+	int tree[16] = {50,76,21,4,32,64,15,52,14,100,83,2,3,70,87,80};
 
 	Node * root = NULL;
+	Node * rootb = NULL;
 
-	root = CreateMinimalHeightBTree(tree, 0, 15);
+	for(int i = 0; i<16; i++)
+		root = Insert(root, tree[i]);
 
+	for(int i = 0; i<7; i++)
+		rootb = Insert(rootb, treeb[i]);
+	//root = CreateMinimalHeightBTree(tree, 0, 15);
+	//rootb = CreateMinimalHeightBTree(treeb, 0, 3);
+	cout<<"Tree 1:\n";
 	LevelOrderPrettyPrint(root);
+	cout<<"Tree 2:\n";
+	LevelOrderPrettyPrint(rootb);
 
+	cout<<IsSubtree(root, rootb);
 
-	int p = 7;
-
-	root = Delete(root, p);
-
-	LevelOrderPrettyPrint(root);
 	return 0;
 }
