@@ -508,6 +508,48 @@ bool IsSubtree(Node * a, Node * b)
 	//check left or right subtrees if current node is not a match
 	return IsSubtree(a->left, b) || IsSubtree(a->right, b); 
 }
+
+void PrintPath(queue<int> * p)
+{
+	if(p->size() == 0)
+		return;
+
+	cout<<"Path:\n";
+	while(!p->empty())
+	{
+		cout<<p->front()<<"->";
+		p->pop();
+	}
+	cout<<endl;
+}
+
+void PrintSumPath(Node * root, int value, int * sum, queue<int> * p)
+{
+	if(root == NULL)
+		return;
+
+	if(value == *sum)
+	{
+		PrintPath(p);
+		*sum = 0;
+	}
+
+	p->push(root->data);
+	*sum += root->data;
+
+	PrintSumPath(root->left, value, sum, p);
+	PrintSumPath(root->right, value, sum, p);
+}
+
+void PrintSumPath(Node * root, int value)
+{
+	if(root == NULL) return;
+
+	queue<int> * path = new queue<int>;
+	int sum = 0;
+
+	PrintSumPath(root, value, &sum, path);
+}
 /////////////////////////////////////////////////////////////////////Test Methods/////////////////////////////////////////////////////////
 void CreateListByLevelTest()
 {
@@ -557,26 +599,18 @@ void FindKthLargestTest()
 int main(void)
 {
 	
-	//int tree[16] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
-	int treeb[7] = {21,4,32,2,15,3,15};
-	int tree[16] = {50,76,21,4,32,64,15,52,14,100,83,2,3,70,87,80};
+	int tree[16] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
+	//int tree[16] = {50,76,21,4,32,64,15,52,14,100,83,2,3,70,87,80};
 
 	Node * root = NULL;
-	Node * rootb = NULL;
+	root = CreateMinimalHeightBTree(tree, 0, 15);
+	// for(int i = 0; i<16; i++)
+	// 	root = Insert(root, tree[i]);
 
-	for(int i = 0; i<16; i++)
-		root = Insert(root, tree[i]);
-
-	for(int i = 0; i<7; i++)
-		rootb = Insert(rootb, treeb[i]);
-	//root = CreateMinimalHeightBTree(tree, 0, 15);
-	//rootb = CreateMinimalHeightBTree(treeb, 0, 3);
-	cout<<"Tree 1:\n";
+	cout<<"Tree:\n";
 	LevelOrderPrettyPrint(root);
-	cout<<"Tree 2:\n";
-	LevelOrderPrettyPrint(rootb);
 
-	cout<<IsSubtree(root, rootb);
+	PrintSumPath(root, 11);
 
 	return 0;
 }
