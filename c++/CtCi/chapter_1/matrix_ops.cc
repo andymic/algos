@@ -41,12 +41,15 @@ void rotate_clockwise_90(vector<vector<int>> & matrix){
 }
 
 
-void set_row_column_zeros(vector<vector<int>> &matrix, int row, int column, int row_max, int col_max){
-    for(int i=0; i<row_max; i++)
+void set_row_zeros(vector<vector<int>> &matrix, int row){
+    for(int i=0; i<matrix.size(); i++)
         matrix[row][i] = 0;
+}
 
-    for(int i=0; i<col_max; i++)
-        matrix[i][column] = 0;
+void set_column_zeros(vector<vector<int>> &matrix, int column){
+    for(int j=0; j< matrix[0].size(); j++){
+        matrix[j][column] = 0;
+    }
 }
 //If an element in an MxN matrix is 0 set its row and column to 0
 void set_zeros(vector<vector<int>> &matrix){
@@ -56,12 +59,26 @@ void set_zeros(vector<vector<int>> &matrix){
     int length = matrix.size();
     int width = matrix[0].size();
 
+    bool row[length] = { false };
+    bool column[width] = { false };
+
     for(int i=0; i<length; i++){
         for(int j=0; j<width; j++){
             if(matrix[i][j] == 0){
-                set_row_column_zeros(matrix, i, j, length, width);
+                row[i] = true;
+                column[j] = true;
             }
         }
+    }
+
+    for(int i=0; i<length; i++){
+        if(row[i] == true)
+            set_row_zeros(matrix, i);
+    }
+
+    for(int j=0; j<width; j++){
+        if(column[j] == true)
+            set_column_zeros(matrix, j);
     }
 }
 
