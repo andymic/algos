@@ -3,6 +3,7 @@
 #include<unordered_set>
 #include<cstdlib>
 #include<algorithm>
+#include<stack>
 using namespace std;
 
 struct Node {
@@ -236,16 +237,55 @@ Node * addBackward(Node *a, Node *b){
 }
 
 Node* getLoopHead(Node *n){
-    Node *stop = n;
-    Node *run = n;
+    Node *slow = n;
+    Node *fast = n;
 
-    if(run->next == NULL)
+    while(fast != NULL && fast->next != NULL){
+        slow = slow->next;
+        fast = fast->next->next;
+
+        if(slow == fast)
+            break;
+    }
+    
+    if(fast == NULL || fast->next == NULL)
         return NULL;
 
-    while(run->next != stop)
-        run = run->next;
+    slow = n;
 
-    return run->next;
+    while(slow != fast){
+        slow = slow->next;
+        fast = fast->next;
+    }
+
+    return fast;
+}
+
+bool isPalindrome(Node *n){
+    if(n == NULL)
+        return false;
+    
+    Node *slow = n;
+    Node *fast = n;
+    stack<int> buf;
+
+    while(fast != NULL && fast->next != NULL){
+        buf.push(slow->data);
+        slow = slow->next;
+        fast = fast->next->next;
+    }
+    //Odd case
+    if(fast != NULL)
+        slow = slow->next;
+
+    while(slow != NULL){
+        if(buf.top() != slow->data)
+            return false;
+        
+        buf.pop();
+        slow = slow->next;
+    }
+    return true;
 }
 
 void testRemoveDuplicates(){
@@ -350,16 +390,39 @@ void testAddiBackward(){
     printList(r);
 }
 
-int main(void){
+void testGetLoopHead(){
     Node *n = makeNode(0);
     Node *t = n;
-    for(int i=0; i<10; i++){
+    for(int i=1; i<10; i++){
         t->next = makeNode(i);
         t=t->next;
     }
-    t->next = n->next;
+    t->next = n->next->next;
 
     Node * r = getLoopHead(n);
     cout<<r->data<<endl;
+}
+
+void testIsPalindrome(){
+    Node *n = makeNode(0);
+    Node *t = n;
+    int ar[] = {1,2,3,2,1,0};
+    for(int i=0; i<6; i++){
+        t->next = makeNode(ar[i]);
+        t=t->next;
+    }
+   
+    cout<<((isPalindrome(n) == 1) ? "true":"false")<<endl;
+}
+int main(void){
+    Node *n = makeNode(0);
+    Node *t = n;
+    int ar[] = {1,2,3,2,1,0};
+    for(int i=0; i<6; i++){
+        t->next = makeNode(ar[i]);
+        t=t->next;
+    }
+   
+    cout<<((isPalindrome(n) == 1) ? "true":"false")<<endl;
     return 0;
 }
