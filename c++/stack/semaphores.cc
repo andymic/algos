@@ -34,7 +34,7 @@ public:
     taken = false;
   }
 
-  inline void notify(){
+  inline void signal(){
     std::unique_lock<std::mutex> lock(mtx);
     count++;
     taken = false;
@@ -60,7 +60,7 @@ public:
     return taken;
   }
 
-  inline int wait(){
+  inline int acquire(){
     std::unique_lock<std::mutex> lock(mtx);
     while(count == 0){
       taken = true;
@@ -94,12 +94,12 @@ class TASLock {
     }
 
     inline void lock(){
-      int val = semaphore->wait();
-      std::cout<<"Semaphore wait: "<<val<<std::endl; 
+      int val = semaphore->acquire();
+      std::cout<<"Semaphore acquire: "<<val<<std::endl; 
     }
 
     inline void unlock(){
-      semaphore->notify();
+      semaphore->signal();
     }
 };
 
@@ -116,12 +116,12 @@ class TTASLock {
 
     inline void lock(){
       while(semaphore->isTaken()){};
-      int val = semaphore->wait();
-      std::cout<<"Semaphore wait: "<<val<<std::endl; 
+      int val = semaphore->acquire();
+      std::cout<<"Semaphore acquire: "<<val<<std::endl; 
     }
 
     inline void unlock(){
-      semaphore->notify();
+      semaphore->signal();
     }
 };
 
@@ -161,7 +161,7 @@ class BackoffLock {
     }
 
     inline void unlock(){
-      semaphore->notify();
+      semaphore->signal();
     }
 };
 
