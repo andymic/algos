@@ -18,7 +18,7 @@
 #include<mutex>
 #include<random>
 #include<algorithm>
-// for random number generation
+#include<ctime>
 std::random_device rd;
 std::mt19937 gen(rd());
 
@@ -61,10 +61,14 @@ public:
   }
 
   inline int acquire(){
-    std::unique_lock<std::mutex> lock(mtx);
-    while(count == 0){
-      taken = true;
-      cv.wait(lock);
+    try{
+        std::unique_lock<std::mutex> lock(mtx);
+        while(count == 0){
+           taken = true;
+           cv.wait(lock);
+        }
+    }catch(std::exception &ex){
+        return false;
     }
     return count--;
   }
@@ -86,7 +90,7 @@ public:
 class TASLock {
   private:
     int consensus;
-    Semaphore *semaphore;
+    Semaphore * semaphore;
   public:
     TASLock(int _consensus=1){
       consensus = _consensus;
@@ -94,8 +98,7 @@ class TASLock {
     }
 
     inline void lock(){
-      int val = semaphore->acquire();
-      std::cout<<"Semaphore acquire: "<<val<<std::endl; 
+      while(!semaphore->acquire());
     }
 
     inline void unlock(){
@@ -117,7 +120,6 @@ class TTASLock {
     inline void lock(){
       while(semaphore->isTaken()){};
       int val = semaphore->acquire();
-      std::cout<<"Semaphore acquire: "<<val<<std::endl; 
     }
 
     inline void unlock(){
@@ -213,17 +215,18 @@ class CLHLock {
     }
 
     void lock(){
-      
-    }
+        QNode * n = new QNode();
+        n->locked = true;
+    }    
 };
 
-std::vector<std::thread> makeThreads(){
-  int min=1, max=32;
-  std::uniform_int_distribution<> dis(min, max);
+std::vector<std::thread> makeThreads(int t=4){
+  //int min=1, max=32;
+  //std::uniform_int_distribution<> dis(min, max);
 
-  int thread_count = dis(gen);
-
-  std::cout<<"Creating "<<thread_count<<" threads...\n";
+  //int thread_count = dis(gen);
+    int thread_count = t;
+  //std::cout<<"Creating "<<thread_count<<" threads...\n";
   std::vector<std::thread> threads;
   for(int i=0; i<thread_count; i++)
     threads.push_back(std::thread());
@@ -231,11 +234,55 @@ std::vector<std::thread> makeThreads(){
   return threads;
 }
 
+void testLock(TASLock &lock){
+    lock.lock();
+    lock.unlock();
+}
+
+void testLock1(TTASLock &lock){
+    lock.lock();
+    lock.unlock();
+}
+
+void testLock2(BackoffLock &lock){
+    lock.lock();
+    lock.unlock();
+}
+
+void testThreads(int t=2){
+  int thread_count = t;
+  int loops = 1000;
+  //TASLock lock(2);
+  //TTASLock lock(2);
+  BackoffLock lock(2);
+    
+  std::clock_t begin = clock();
+   for(int j=0; j<loops; j++){
+        std::vector<std::thread> threads;
+        for(int i=0; i<thread_count; i++){
+            threads.push_back(std::thread(testLock2, std::ref(lock)));
+        }
+        
+        for(int i=0; i<thread_count; i++){
+         threads.at(i).join();
+        }
+   }
+    
+   std::clock_t end = clock();
+  double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+  std::cout<<""<<elapsed_secs<<","<<thread_count+1<<std::endl; 
+}
+
 int main(void){
-    makeThreads();
-    TTASLock tas;
-    tas.lock();
-    tas.unlock();
-    tas.lock();
-    return 0;
+   int ar[6]={1,2,4,8,16,32};
+
+   for(int i=0; i<32; i++){
+     testThreads(i);
+   }
+   
+   // TASLock tas;
+   // tas.lock();
+   // tas.unlock();
+   // tas.lock();
+   // return 0;
 }
