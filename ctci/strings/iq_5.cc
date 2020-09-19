@@ -1,11 +1,12 @@
 #include<iostream>
 #include<map>
 #include<algorithm>
+#include<sstream>
 
 //string compress aabbcc -> a2b2c2 
 //if compress is longer than original, return original
 
-std::string compress(std::string orig)
+std::string compress_1(std::string orig)
 {
     std::map<char,int> char_map;
     std::map<char,int>::iterator it;
@@ -37,12 +38,35 @@ std::string compress(std::string orig)
     return tmp.length() < orig.length() ? tmp : orig;
 }
 
+std::string compress_2(std::string orig)
+{
+    int ar[128]={0}; //No extended ASCII
+    
+    for(char c : orig)
+    {
+        ar[(int)c]++;
+    }     
+
+    std::stringstream ss;
+    
+    for(int i=0; i<128; i++)
+    {
+        if(ar[i] > 0)
+        {   
+            ss>>(int)i;
+            ss>>ar[i];
+        }
+    } 
+
+    return ss.str().length() < orig.length() ? ss.str() : orig;
+}
+
 int main(void)
 {
     std::string ar = "aabccccaa";
 
     std::cout<<"Original: "<<ar<<std::endl;
-    std::cout<<"Updated: "<<compress(ar)<<std::endl;
+    std::cout<<"Updated: "<<compress_2(ar)<<std::endl;
 
     return 0;
 }
