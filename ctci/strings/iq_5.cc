@@ -52,12 +52,12 @@ std::string compress_2(std::string orig)
     for(int i=0; i<128; i++)
     {
         if(ar[i] > 0)
-        {   
-            ss>>(int)i;
-            ss>>ar[i];
+        {  
+            ss<<(char)i;
+            ss<<ar[i];
         }
     } 
-
+    
     return ss.str().length() < orig.length() ? ss.str() : orig;
 }
 

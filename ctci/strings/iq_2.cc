@@ -70,7 +70,7 @@ void reverse5(char *s)
     while(s < end)
     {
         tmp = *s;
-        *s = *end;
+        *s++ = *end;
         *end-- = tmp;
     }
 }

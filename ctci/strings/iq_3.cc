@@ -27,7 +27,8 @@ bool isPermutation2(std::string s1, std::string s2)
         ascii[(int)s1[i]]++;
 
     for(int i=0; i<len; i++)
-        if(--ascii[(int)s2[i]] < 0) return false;
+        if(--ascii[(int)s2[i]] < 0) 
+            return false;
     
     return true;
 }

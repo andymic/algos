@@ -4,7 +4,7 @@
 
 //Replace spaces with %20
 
-bool replaceSpace(char *s, size_t len)
+void replaceSpace(char *s, size_t len)
 {
     int back_iter = strlen(s)-1; 
 

@@ -57,9 +57,15 @@ int main()
         {1,2,3,4}
     };
     
+    std::vector<std::vector<int>> vect2 {
+        {1,2,3},
+        {4,5,6},
+        {7,8,9}
+    };
+    
     std::cout<<"Before:\n";
-    print(vect);
-    rotate90_2(vect); 
+    print(vect2);
+    rotate90_2(vect2); 
     std::cout<<"After:\n";
-    print(vect);
+    print(vect2);
 }
