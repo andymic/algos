@@ -49,6 +49,26 @@ class LinkedList
             }
             tmp->next = mknode(data);
         }
+        
+        void insert(Node<T> *node)
+        {
+            if(node == nullptr)
+                return;
+
+            if(_head == nullptr)
+            {
+                _head = node;
+                return;
+            }
+
+            Node<T> *tmp = _head;
+
+            while(tmp->next != nullptr)
+            {
+                tmp = tmp->next;
+            }
+            tmp->next = node; 
+        }
 
         Node<T>* find(T data)
         {
