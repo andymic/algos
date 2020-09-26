@@ -1,7 +1,8 @@
 #include<iostream>
+#include<set>
 #include "list.h"
 
-void removedups(LinkedList<int> &ll)
+void removedups_1(LinkedList<int> &ll)
 {
     
     Node<int> *curr = ll.head();   
@@ -29,6 +30,23 @@ void removedups(LinkedList<int> &ll)
     }
 }
 
+void removedups_2(LinkedList<int> &ll)
+{
+    Node<int> *head = ll.head();
+    if(head == nullptr)
+        return;
+
+    std::set<int> set;
+    while(head)
+    {
+        if(!set.insert(head->data).second)
+        {
+            ll.remove(head->data);
+        }
+        head = head->next;
+    }
+}
+
 int main(void)
 {
     LinkedList<int> ll;
@@ -40,7 +58,7 @@ int main(void)
         ll.insert(i);
     
     ll.print();
-    removedups(ll);
+    removedups_2(ll);
     ll.print();
     return 0;
 }

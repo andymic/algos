@@ -4,7 +4,7 @@
 //Delete a node in the middle of a linked list
 //given access to only that node
 
-void deleteNode(Node<int> *n)
+void deleteNode_1(Node<int> *n)
 {
    if(n == nullptr)
       return;
@@ -21,6 +21,15 @@ void deleteNode(Node<int> *n)
    delete prev->next;
 }
 
+void deleteNode_2(Node<int> *n)
+{
+    if(n == nullptr || n->next == nullptr)
+        return;    
+
+    n->data = n->next->data;
+    n->next = n->next->next;
+}
+
 int main(void)
 {
     LinkedList<int> ll;
@@ -30,7 +39,7 @@ int main(void)
     
     ll.print();
     Node<int> *tmp = ll.find(14);
-    deleteNode(tmp);
+    deleteNode_2(tmp);
     ll.print();
     return 0;
 }

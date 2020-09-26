@@ -2,12 +2,12 @@
 #include "list.h"
 
 //Find Kth to last element of a singly linked list
-Node<int>* findKth(int k, int &c, Node<int>* n)
+Node<int>* findKthRec(int k, int &c, Node<int> *n)
 {
     if(n == nullptr)
         return nullptr;
 
-    Node<int> *tmp = findKth(k, c, n->next);
+    Node<int> *tmp = findKthRec(k, c, n->next);
 
     c++;
 
@@ -17,10 +17,36 @@ Node<int>* findKth(int k, int &c, Node<int>* n)
     return tmp;
 }
 
-Node<int>* findKth(int k, Node<int>* n)
+Node<int>* findKthRec(int k, Node<int> *n)
 {
     int c = 0;
-    return findKth(k,c,n);
+    return findKthRec(k,c,n);
+}
+
+Node<int>* findKthIter(int k, Node<int> *n)
+{
+    if(n == nullptr)
+        return nullptr;
+
+    Node<int> *target, *end;
+    target = end = n;
+
+    for(int i=0; i<k; i++)
+    {
+        if(end == nullptr)
+           return nullptr; 
+        end = end->next;
+    }
+
+    if(end == nullptr)
+        return nullptr;
+
+    while(end != nullptr)
+    {
+        end = end->next;
+        target = target->next;
+    }
+    return target;
 }
 
 int main(void)
@@ -32,7 +58,7 @@ int main(void)
     
     ll.print();
 
-    std::cout<<findKth(8, ll.head())->data<<std::endl;
+    std::cout<<findKthIter(8, ll.head())->data<<std::endl;
     return 0;
 }
 
